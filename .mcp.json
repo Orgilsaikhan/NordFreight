@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mssql": {
+      "type": "stdio",
+      "command": "uv",
+      "args": [
+        "run",
+        "--script",
+        "C:/Nowel/mcp-server/mssql_mcp.py"
+      ],
+      "env": {
+        "MSSQL_SERVER": "lpc:.\\SQLEXPRESS",
+        "MSSQL_DATABASE": "NordFreightDB"
+      }
+    }
+  }
+}
