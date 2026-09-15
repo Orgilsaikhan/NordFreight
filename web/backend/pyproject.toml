@@ -1,0 +1,10 @@
+[project]
+name = "nordfreight-api"
+version = "0.1.0"
+description = "FastAPI backend for the NordFreight website"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.141,<1",
+    "pyodbc>=5.3,<6",
+    "uvicorn>=0.53,<1",
+]

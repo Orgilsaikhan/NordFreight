@@ -1,0 +1,50 @@
+"""NordFreight web API.
+
+Development:  uv run uvicorn app.main:app --reload   (Vite's dev server proxies /api here)
+Production:   build ../frontend with `npm run build`, then `uv run uvicorn app.main:app`
+"""
+
+import logging
+from pathlib import Path
+
+import pyodbc
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+from .db import describe_error
+from .routes import customers, invoices, operations, overview, reference, shipments
+
+FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+
+logger = logging.getLogger("uvicorn.error")
+
+app = FastAPI(title="NordFreight API")
+
+for module in (overview, shipments, customers, invoices, operations, reference):
+    app.include_router(module.router, prefix="/api")
+
+
+# Plainer wording for unique constraints that a form can run into.
+DUPLICATE_MESSAGES = {
+    "UQ_Payments_Invoice_Reference": "This invoice already has a payment with that reference number.",
+}
+
+
+@app.exception_handler(pyodbc.Error)
+async def database_error(request: Request, exc: pyodbc.Error) -> JSONResponse:
+    number, message = describe_error(exc)
+    if number is not None and 50000 <= number <= 50999:
+        # THROW from a stored procedure: a business rule refused the change.
+        return JSONResponse(status_code=422, content={"detail": message})
+    if number in (2601, 2627):
+        friendly = next((text for name, text in DUPLICATE_MESSAGES.items() if name in message), message)
+        return JSONResponse(status_code=409, content={"detail": friendly})
+    if number == 547:
+        return JSONResponse(status_code=422, content={"detail": message})
+    logger.error("Database error on %s %s: %s", request.method, request.url.path, message)
+    return JSONResponse(status_code=500, content={"detail": f"Database error: {message}"})
+
+
+# Serve the built React app when it exists; during development Vite serves it instead.
+if FRONTEND_DIST.is_dir():
+    app.frontend("/", directory=FRONTEND_DIST, fallback="index.html")
