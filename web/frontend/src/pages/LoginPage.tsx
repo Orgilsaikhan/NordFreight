@@ -20,7 +20,7 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    document.title = 'Sign in · NordFreight'
+    document.title = 'Нэвтрэх · NordFreight'
   }, [])
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -46,12 +46,12 @@ export function LoginPage() {
           <span className="brand-mark" aria-hidden="true" />
           NordFreight
         </div>
-        <h1>Sign in</h1>
-        <p className="subtitle">Use your NordFreight account to continue.</p>
+        <h1>Нэвтрэх</h1>
+        <p className="subtitle">Үргэлжлүүлэхийн тулд NordFreight бүртгэлээрээ нэвтэрнэ үү.</p>
         <form className="login-form" onSubmit={submit}>
           {error && <ErrorMessage message={error} />}
           <label className="control">
-            <span>Username</span>
+            <span>Нэвтрэх нэр</span>
             <input
               className="input"
               name="username"
@@ -63,7 +63,7 @@ export function LoginPage() {
             />
           </label>
           <label className="control">
-            <span>Password</span>
+            <span>Нууц үг</span>
             <input
               className="input"
               type="password"
@@ -75,7 +75,7 @@ export function LoginPage() {
             />
           </label>
           <button type="submit" className="button primary block" disabled={submitting}>
-            {submitting ? 'Signing in…' : 'Sign in'}
+            {submitting ? 'Нэвтэрч байна…' : 'Нэвтрэх'}
           </button>
         </form>
       </div>

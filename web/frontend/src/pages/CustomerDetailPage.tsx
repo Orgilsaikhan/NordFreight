@@ -60,7 +60,7 @@ function CustomerView({ customer: c }: { customer: CustomerDetail }) {
   return (
     <>
       <PageHeader
-        back={{ to: '/customers', label: 'Customers' }}
+        back={{ to: '/customers', label: 'Харилцагчид' }}
         title={c.LegalName}
         subtitle={[c.CustomerCode, c.TradingName].filter(Boolean).join(' · ')}
         actions={<StatusBadge value={c.IsActive ? 'Active' : 'Inactive'} />}
@@ -68,46 +68,46 @@ function CustomerView({ customer: c }: { customer: CustomerDetail }) {
       <div className="stack">
         <div className="kpis">
           <StatTile
-            label="Lifetime revenue"
+            label="Нийт орлого"
             value={fmt.compactMoney(c.LifetimeRevenue)}
-            meta={fmt.plural(c.TotalShipments ?? 0, 'shipment')}
+            meta={fmt.count(c.TotalShipments ?? 0, 'ачаа')}
           />
-          <StatTile label="Open shipments" value={fmt.num(c.OpenShipments)} meta={`Last pickup ${fmt.date(c.LastShipmentDate)}`} />
+          <StatTile label="Идэвхтэй ачаа" value={fmt.num(c.OpenShipments)} meta={`Сүүлд ачсан: ${fmt.date(c.LastShipmentDate)}`} />
           <StatTile
-            label="On-time delivery"
+            label="Хугацаандаа хүргэлт"
             value={fmt.percent(c.OnTimePercentage)}
-            meta={`${fmt.num(c.DeliveredShipments)} delivered`}
+            meta={`Хүргэсэн: ${fmt.num(c.DeliveredShipments)}`}
           />
           <StatTile
-            label="Outstanding balance"
+            label="Төлөгдөөгүй үлдэгдэл"
             value={fmt.compactMoney(c.OutstandingBalance)}
-            meta={hasCreditLimit ? `${fmt.compactMoney(c.AvailableCredit)} credit available` : 'No credit limit'}
+            meta={hasCreditLimit ? `Боломжит зээл: ${fmt.compactMoney(c.AvailableCredit)}` : 'Зээлийн хязгааргүй'}
           />
         </div>
 
         <div className="grid-2">
-          <Card title="Account">
+          <Card title="Харилцагчийн мэдээлэл">
             <Fields>
-              <Field label="Tax number">{c.TaxNumber}</Field>
-              <Field label="Billing address">
+              <Field label="Татвар төлөгчийн дугаар">{c.TaxNumber}</Field>
+              <Field label="Нэхэмжлэх хаяг">
                 {`${c.BillingLine1}, ${c.BillingPostalCode} ${c.BillingCity}, ${c.BillingCountry}`}
               </Field>
-              <Field label="Customer since">{fmt.date(c.OnboardedOn)}</Field>
-              <Field label="Payment terms">{fmt.plural(c.PaymentTermsDays, 'day')}</Field>
-              <Field label="Credit limit">{hasCreditLimit ? fmt.money(c.CreditLimit) : 'No limit'}</Field>
-              <Field label="Available credit">{hasCreditLimit ? fmt.money(c.AvailableCredit) : '—'}</Field>
+              <Field label="Хамтарч эхэлсэн">{fmt.date(c.OnboardedOn)}</Field>
+              <Field label="Төлбөрийн хугацаа">{fmt.count(c.PaymentTermsDays, 'хоног')}</Field>
+              <Field label="Зээлийн хязгаар">{hasCreditLimit ? fmt.money(c.CreditLimit) : 'Хязгааргүй'}</Field>
+              <Field label="Боломжит зээл">{hasCreditLimit ? fmt.money(c.AvailableCredit) : '—'}</Field>
             </Fields>
           </Card>
-          <Card title="Contacts">
+          <Card title="Холбоо барих хүмүүс">
             {c.contacts.length === 0 ? (
-              <p className="empty">No contacts on file.</p>
+              <p className="empty">Холбоо барих хүн бүртгэгдээгүй.</p>
             ) : (
               <ul className="list">
                 {c.contacts.map((contact) => (
                   <li key={contact.ContactId}>
                     <div>
                       <strong>{contact.FullName}</strong>
-                      {contact.IsPrimary && <span className="tag">Primary</span>}
+                      {contact.IsPrimary && <span className="tag">Үндсэн</span>}
                     </div>
                     <div className="muted small">
                       {contact.JobTitle && <span>{contact.JobTitle} · </span>}
@@ -123,13 +123,13 @@ function CustomerView({ customer: c }: { customer: CustomerDetail }) {
 
         <CustomerShipments customerId={c.CustomerId} />
 
-        <Card title="Invoices">
+        <Card title="Нэхэмжлэх">
           <DataTable
             columns={invoiceColumns}
             rows={c.invoices}
             rowKey={(invoice) => invoice.InvoiceId}
             onRowClick={(invoice) => navigate(`/invoices/${invoice.InvoiceId}`)}
-            empty="No invoices yet."
+            empty="Нэхэмжлэх алга."
           />
         </Card>
       </div>
@@ -147,19 +147,19 @@ function CustomerShipments({ customerId }: { customerId: number }) {
 
   return (
     <Card
-      title="Shipments"
-      subtitle="Paged by usp_GetCustomerShipments"
+      title="Ачаа"
+      subtitle="usp_GetCustomerShipments хуудаслан гаргана"
       actions={
         <select
           className="select small"
-          aria-label="Filter shipments by status"
+          aria-label="Ачааг төлөвөөр шүүх"
           value={status}
           onChange={(event) => {
             setStatus(event.target.value)
             setPage(1)
           }}
         >
-          <option value="">All statuses</option>
+          <option value="">Бүх төлөв</option>
           {SHIPMENT_STATUSES.map((value) => (
             <option key={value} value={value}>
               {fmt.humanize(value)}
@@ -176,7 +176,7 @@ function CustomerShipments({ customerId }: { customerId: number }) {
               rows={data.rows}
               rowKey={(shipment) => shipment.ShipmentId}
               onRowClick={(shipment) => navigate(`/shipments/${shipment.ShipmentId}`)}
-              empty="No shipments match."
+              empty="Тохирох ачаа алга."
             />
             <Pagination page={page} pageSize={SHIPMENTS_PAGE_SIZE} total={data.total} onPage={setPage} />
           </>

@@ -14,13 +14,13 @@ export function Pagination({ page, pageSize, total, onPage }: PaginationProps) {
 
   return (
     <div className="pagination">
-      <span>{total === 0 ? 'No results' : `${fmt.num(first)}–${fmt.num(last)} of ${fmt.num(total)}`}</span>
+      <span>{total === 0 ? 'Илэрц алга' : `${fmt.num(first)}–${fmt.num(last)} / нийт ${fmt.num(total)}`}</span>
       <div className="pagination-buttons">
         <button type="button" className="button small" disabled={page <= 1} onClick={() => onPage(page - 1)}>
-          Previous
+          Өмнөх
         </button>
         <button type="button" className="button small" disabled={page >= pages} onClick={() => onPage(page + 1)}>
-          Next
+          Дараах
         </button>
       </div>
     </div>

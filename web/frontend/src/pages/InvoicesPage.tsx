@@ -12,6 +12,15 @@ import { AGEING_BUCKETS, INVOICE_STATUSES } from '../status'
 import type { InvoiceList, InvoiceRow } from '../types'
 import { useApi } from '../useApi'
 
+// Tile labels for the ageing buckets that vw_OutstandingInvoices returns.
+const AGEING_LABELS: Record<string, string> = {
+  Current: 'Хугацаа болоогүй',
+  '1-30 days': '1–30 хоног хэтэрсэн',
+  '31-60 days': '31–60 хоног хэтэрсэн',
+  '61-90 days': '61–90 хоног хэтэрсэн',
+  '90+ days': '90+ хоног хэтэрсэн',
+}
+
 const columns: Column<InvoiceRow>[] = [
   {
     key: 'number',
@@ -48,7 +57,7 @@ const columns: Column<InvoiceRow>[] = [
     key: 'overdue',
     header: 'Overdue',
     align: 'right',
-    render: (invoice) => (invoice.DaysOverdue && invoice.DaysOverdue > 0 ? fmt.plural(invoice.DaysOverdue, 'day') : '—'),
+    render: (invoice) => (invoice.DaysOverdue && invoice.DaysOverdue > 0 ? fmt.count(invoice.DaysOverdue, 'хоног') : '—'),
     sortValue: (invoice) => (invoice.DaysOverdue && invoice.DaysOverdue > 0 ? invoice.DaysOverdue : null),
   },
 ]
@@ -67,7 +76,7 @@ export function InvoicesPage() {
 
   return (
     <>
-      <PageHeader title="Invoices" subtitle="Receivables and payment status" />
+      <PageHeader title="Нэхэмжлэх" subtitle="Авлага ба төлбөрийн төлөв" />
       <Loadable state={state}>
         {(data) => {
           const term = search.trim().toLowerCase()
@@ -85,39 +94,39 @@ export function InvoicesPage() {
                   return (
                     <StatTile
                       key={bucket}
-                      label={bucket === 'Current' ? 'Not yet due' : `Overdue ${bucket}`}
+                      label={AGEING_LABELS[bucket] ?? bucket}
                       value={fmt.compactMoney(entry?.BalanceDue ?? 0)}
-                      meta={fmt.plural(entry?.Invoices ?? 0, 'invoice')}
+                      meta={fmt.count(entry?.Invoices ?? 0, 'нэхэмжлэх')}
                     />
                   )
                 })}
               </div>
 
               <div className="toolbar">
-                <div className="segmented" role="group" aria-label="Which invoices">
+                <div className="segmented" role="group" aria-label="Нэхэмжлэх сонгох">
                   <button
                     type="button"
                     aria-pressed={scope === 'outstanding'}
                     onClick={() => updateSearchParams(setParams, { scope: '', status: '' })}
                   >
-                    Outstanding
+                    Төлөгдөөгүй
                   </button>
                   <button
                     type="button"
                     aria-pressed={scope === 'all'}
                     onClick={() => updateSearchParams(setParams, { scope: 'all' })}
                   >
-                    All
+                    Бүгд
                   </button>
                 </div>
                 {scope === 'all' && (
                   <select
                     className="select"
-                    aria-label="Filter by status"
+                    aria-label="Төлөвөөр шүүх"
                     value={status}
                     onChange={(event) => updateSearchParams(setParams, { status: event.target.value })}
                   >
-                    <option value="">All statuses</option>
+                    <option value="">Бүх төлөв</option>
                     {INVOICE_STATUSES.map((value) => (
                       <option key={value} value={value}>
                         {fmt.humanize(value)}
@@ -128,8 +137,8 @@ export function InvoicesPage() {
                 <input
                   className="input search"
                   type="search"
-                  placeholder="Search invoice or customer"
-                  aria-label="Search invoices"
+                  placeholder="Нэхэмжлэх эсвэл харилцагчаар хайх"
+                  aria-label="Нэхэмжлэх хайх"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
@@ -141,7 +150,7 @@ export function InvoicesPage() {
                   rows={rows}
                   rowKey={(invoice) => invoice.InvoiceId}
                   onRowClick={(invoice) => navigate(`/invoices/${invoice.InvoiceId}`)}
-                  empty="No invoices match."
+                  empty="Тохирох нэхэмжлэх алга."
                 />
               </Card>
             </div>

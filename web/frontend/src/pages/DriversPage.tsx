@@ -15,7 +15,7 @@ const columns: Column<Driver>[] = [
     render: (driver) => (
       <>
         {driver.DriverName}
-        {driver.IsCurrentlyEmployed === false && <span className="tag">Left</span>}
+        {driver.IsCurrentlyEmployed === false && <span className="tag">Гарсан</span>}
         <span className="cell-sub">{`${driver.EmployeeCode} · ${driver.HomeTerminal}`}</span>
       </>
     ),
@@ -27,7 +27,7 @@ const columns: Column<Driver>[] = [
     render: (driver) => (
       <>
         {driver.LicenceClass}
-        <span className="cell-sub">{`Expires ${fmt.date(driver.LicenceExpiresOn)}`}</span>
+        <span className="cell-sub">{`Дуусах: ${fmt.date(driver.LicenceExpiresOn)}`}</span>
       </>
     ),
     sortValue: (driver) => driver.LicenceExpiresOn,
@@ -35,7 +35,7 @@ const columns: Column<Driver>[] = [
   {
     key: 'adr',
     header: 'ADR',
-    render: (driver) => (driver.HasHazmatEndorsement ? 'Yes' : 'No'),
+    render: (driver) => (driver.HasHazmatEndorsement ? 'Тийм' : 'Үгүй'),
     sortValue: (driver) => driver.HasHazmatEndorsement,
   },
   { key: 'trips', header: 'Trips', align: 'right', render: (driver) => fmt.num(driver.TotalTrips), sortValue: (driver) => driver.TotalTrips },
@@ -43,7 +43,7 @@ const columns: Column<Driver>[] = [
     key: 'distance',
     header: 'Distance',
     align: 'right',
-    render: (driver) => `${fmt.num(driver.TotalKmDriven)} km`,
+    render: (driver) => `${fmt.num(driver.TotalKmDriven)} км`,
     sortValue: (driver) => driver.TotalKmDriven,
   },
   {
@@ -74,7 +74,7 @@ export function DriversPage() {
 
   return (
     <>
-      <PageHeader title="Drivers" subtitle="Utilisation and licence compliance" />
+      <PageHeader title="Жолооч нар" subtitle="Ачаалал ба жолооны үнэмлэхийн хүчинтэй байдал" />
       <Loadable state={state}>
         {(drivers) => {
           const statuses = [...new Set(drivers.map((driver) => driver.ComplianceStatus))].sort()
@@ -90,18 +90,18 @@ export function DriversPage() {
                 <input
                   className="input search"
                   type="search"
-                  placeholder="Search name, code or terminal"
-                  aria-label="Search drivers"
+                  placeholder="Нэр, код эсвэл терминалаар хайх"
+                  aria-label="Жолооч хайх"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
                 <select
                   className="select"
-                  aria-label="Filter by compliance"
+                  aria-label="Үнэмлэхийн төлөвөөр шүүх"
                   value={compliance}
                   onChange={(event) => setCompliance(event.target.value)}
                 >
-                  <option value="">Any compliance</option>
+                  <option value="">Бүх төлөв</option>
                   {statuses.map((status) => (
                     <option key={status} value={status}>
                       {fmt.humanize(status)}
@@ -115,7 +115,7 @@ export function DriversPage() {
                   rows={rows}
                   rowKey={(driver) => driver.DriverId}
                   initialSort={{ key: 'name', direction: 'asc' }}
-                  empty="No drivers match."
+                  empty="Тохирох жолооч алга."
                 />
               </Card>
             </>

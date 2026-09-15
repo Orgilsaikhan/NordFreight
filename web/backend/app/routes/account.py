@@ -47,7 +47,9 @@ def sign_in(credentials: Credentials, response: Response):
         ).fetchone()
         password_ok = verify_password(credentials.password, user["password_hash"] if user else UNKNOWN_USER_HASH)
         if user is None or not password_ok:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password.")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Нэвтрэх нэр эсвэл нууц үг буруу байна."
+            )
         token = start_session(conn, user["id"])
     response.set_cookie(
         SESSION_COOKIE,
@@ -79,7 +81,7 @@ def change_password(change: PasswordChange, user: CurrentUser, session: SessionT
     with store() as conn:
         row = conn.execute("SELECT password_hash FROM users WHERE id = ?", (user.id,)).fetchone()
         if not verify_password(change.current_password, row["password_hash"]):
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Your current password is incorrect.")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Одоогийн нууц үг буруу байна.")
         conn.execute("UPDATE users SET password_hash = ? WHERE id = ?", (hash_password(change.new_password), user.id))
         # Other browsers signed in to this account must sign in again with the new password.
         conn.execute("DELETE FROM sessions WHERE user_id = ? AND token_hash <> ?", (user.id, token_hash(session or "")))
@@ -99,6 +101,7 @@ def create_user(new_user: NewUser):
             row = add_user(conn, new_user.username, new_user.password)
     except sqlite3.IntegrityError:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail=f"There is already a user called {new_user.username}."
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"{new_user.username} нэртэй хэрэглэгч аль хэдийн бүртгэлтэй байна.",
         ) from None
     return dict(row)

@@ -10,7 +10,6 @@ export class ApiError extends Error {
 
 interface ValidationIssue {
   loc?: (string | number)[]
-  msg?: string
 }
 
 let onUnauthorized: (() => void) | null = null
@@ -29,7 +28,7 @@ function detailText(body: unknown): string | null {
     return detail
       .map((issue: ValidationIssue) => {
         const field = (issue.loc ?? []).filter((part) => part !== 'body').join('.')
-        return field ? `${field}: ${issue.msg ?? 'invalid'}` : (issue.msg ?? 'Invalid request.')
+        return field ? `Буруу утга: ${field}` : 'Хүсэлт буруу байна.'
       })
       .join('; ')
   }
@@ -49,9 +48,9 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     // The sign-in endpoints report their own 401s; anywhere else it means the session is gone.
     if (response.status === 401 && !path.startsWith('/auth/')) onUnauthorized?.()
     if (!isJson && response.status >= 500) {
-      throw new ApiError(response.status, 'The API is not responding. Is the backend running?')
+      throw new ApiError(response.status, 'API хариу өгөхгүй байна. Backend ажиллаж байгаа эсэхийг шалгана уу.')
     }
-    throw new ApiError(response.status, detailText(body) ?? `Request failed with status ${response.status}.`)
+    throw new ApiError(response.status, detailText(body) ?? `Хүсэлт амжилтгүй боллоо (${response.status}).`)
   }
   return body as T
 }
@@ -62,7 +61,7 @@ export const api = {
 }
 
 export function errorText(error: unknown): string {
-  if (error instanceof TypeError) return 'Could not reach the API. Is the backend running?'
+  if (error instanceof TypeError) return 'API-тай холбогдож чадсангүй. Backend ажиллаж байгаа эсэхийг шалгана уу.'
   if (error instanceof Error) return error.message
-  return 'Something went wrong.'
+  return 'Алдаа гарлаа.'
 }

@@ -75,7 +75,7 @@ export function CustomersPage() {
 
   return (
     <>
-      <PageHeader title="Customers" subtitle="Accounts ranked by lifetime revenue" />
+      <PageHeader title="Харилцагчид" subtitle="Нийт орлогоор эрэмбэлсэн харилцагчид" />
       <Card>
         <Loadable state={state}>
           {(rows) => (

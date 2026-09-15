@@ -48,36 +48,36 @@ function InvoiceView({ invoice: i, onChanged }: { invoice: InvoiceDetail; onChan
   return (
     <>
       <PageHeader
-        back={{ to: '/invoices', label: 'Invoices' }}
+        back={{ to: '/invoices', label: 'Нэхэмжлэх' }}
         title={i.InvoiceNumber}
         subtitle={<Link to={`/customers/${i.CustomerId}`}>{i.CustomerName}</Link>}
         actions={<StatusBadge value={i.Status} />}
       />
       <div className="stack">
         <div className="kpis">
-          <StatTile label="Total" value={fmt.money(i.TotalAmount)} meta={`${fmt.money(i.TaxAmount)} VAT included`} />
-          <StatTile label="Paid" value={fmt.money(i.AmountPaid)} meta={fmt.plural(i.payments.length, 'payment')} />
+          <StatTile label="Нийт дүн" value={fmt.money(i.TotalAmount)} meta={`НӨАТ ${fmt.money(i.TaxAmount)} орсон`} />
+          <StatTile label="Төлсөн" value={fmt.money(i.AmountPaid)} meta={fmt.count(i.payments.length, 'төлбөр')} />
           <StatTile
-            label="Balance due"
+            label="Төлөх үлдэгдэл"
             value={fmt.money(i.BalanceDue)}
-            meta={overdue ? `${fmt.plural(i.DaysOverdue ?? 0, 'day')} overdue` : `Due ${fmt.date(i.DueDate)}`}
+            meta={overdue ? `${fmt.count(i.DaysOverdue ?? 0, 'хоног')} хэтэрсэн` : `Төлөх хугацаа: ${fmt.date(i.DueDate)}`}
             trend={overdue ? 'bad' : undefined}
           />
-          <StatTile label="Issued" value={fmt.date(i.IssueDate)} meta={`Due ${fmt.date(i.DueDate)}`} />
+          <StatTile label="Нэхэмжилсэн" value={fmt.date(i.IssueDate)} meta={`Төлөх хугацаа: ${fmt.date(i.DueDate)}`} />
         </div>
 
         {canPay && <PaymentForm key={i.AmountPaid} invoice={i} onChanged={onChanged} />}
 
-        <Card title="Lines" subtitle={fmt.plural(i.lines.length, 'shipment')}>
+        <Card title="Нэхэмжлэхийн мөр" subtitle={fmt.count(i.lines.length, 'ачаа')}>
           <DataTable columns={lineColumns} rows={i.lines} rowKey={(line) => line.LineNumber} />
         </Card>
 
-        <Card title="Payments">
+        <Card title="Төлбөрүүд">
           <DataTable
             columns={paymentColumns}
             rows={i.payments}
             rowKey={(payment) => payment.PaymentId}
-            empty="No payments recorded yet."
+            empty="Төлбөр бүртгэгдээгүй байна."
           />
         </Card>
       </div>
@@ -116,11 +116,11 @@ function PaymentForm({ invoice, onChanged }: { invoice: InvoiceDetail; onChanged
   }
 
   return (
-    <Card title="Record a payment" subtitle="Posted by usp_RecordPayment; the invoice status updates itself">
+    <Card title="Төлбөр бүртгэх" subtitle="usp_RecordPayment бүртгэнэ; нэхэмжлэхийн төлөв автоматаар шинэчлэгдэнэ">
       {error && <ErrorMessage message={error} />}
       <form className="form-inline" onSubmit={submit}>
         <label className="control">
-          <span>Method</span>
+          <span>Төлбөрийн хэлбэр</span>
           <select className="select" required value={selectedMethod} onChange={(event) => setMethodId(event.target.value)}>
             {methods.map((method) => (
               <option key={method.PaymentMethodId} value={method.PaymentMethodId}>
@@ -130,7 +130,7 @@ function PaymentForm({ invoice, onChanged }: { invoice: InvoiceDetail; onChanged
           </select>
         </label>
         <label className="control">
-          <span>Amount (EUR)</span>
+          <span>Дүн (EUR)</span>
           <input
             className="input"
             type="number"
@@ -143,22 +143,22 @@ function PaymentForm({ invoice, onChanged }: { invoice: InvoiceDetail; onChanged
           />
         </label>
         <label className="control grow">
-          <span>Reference</span>
+          <span>Гүйлгээний дугаар</span>
           <input
             className="input"
             required
             maxLength={50}
-            placeholder="Bank reference"
+            placeholder="Банкны гүйлгээний дугаар"
             value={reference}
             onChange={(event) => setReference(event.target.value)}
           />
         </label>
         <label className="control">
-          <span>Paid on</span>
+          <span>Төлсөн өдөр</span>
           <input className="input" type="date" required value={paidOn} onChange={(event) => setPaidOn(event.target.value)} />
         </label>
         <button type="submit" className="button primary" disabled={saving || methods.length === 0}>
-          {saving ? 'Saving…' : 'Record payment'}
+          {saving ? 'Хадгалж байна…' : 'Төлбөр бүртгэх'}
         </button>
       </form>
     </Card>

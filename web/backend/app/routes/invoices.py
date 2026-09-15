@@ -63,7 +63,7 @@ def list_invoices(conn: Connection, status: InvoiceStatus | None = None, outstan
 def get_invoice(invoice_id: int, conn: Connection):
     invoice = fetch_one(conn, f"SELECT {INVOICE_COLUMNS}, i.Notes {INVOICE_SOURCE} WHERE i.InvoiceId = ?;", invoice_id)
     if invoice is None:
-        raise HTTPException(status_code=404, detail="Invoice not found.")
+        raise HTTPException(status_code=404, detail="Нэхэмжлэх олдсонгүй.")
     invoice["lines"] = fetch_all(
         conn,
         """

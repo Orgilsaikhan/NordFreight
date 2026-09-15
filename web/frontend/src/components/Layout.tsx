@@ -3,13 +3,13 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { useAuth } from '../auth'
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Overview' },
-  { to: '/shipments', label: 'Shipments' },
-  { to: '/customers', label: 'Customers' },
-  { to: '/invoices', label: 'Invoices' },
-  { to: '/fleet', label: 'Fleet' },
-  { to: '/drivers', label: 'Drivers' },
-  { to: '/lanes', label: 'Lanes' },
+  { to: '/', label: 'Тойм' },
+  { to: '/shipments', label: 'Ачаа' },
+  { to: '/customers', label: 'Харилцагчид' },
+  { to: '/invoices', label: 'Нэхэмжлэх' },
+  { to: '/fleet', label: 'Авто парк' },
+  { to: '/drivers', label: 'Жолооч нар' },
+  { to: '/lanes', label: 'Чиглэлүүд' },
 ]
 
 export function Layout() {
@@ -27,7 +27,7 @@ export function Layout() {
           <span className="brand-mark" aria-hidden="true" />
           NordFreight
         </Link>
-        <nav className="nav" aria-label="Main">
+        <nav className="nav" aria-label="Үндсэн цэс">
           {NAV_ITEMS.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.to === '/'}>
               {item.label}
@@ -35,14 +35,14 @@ export function Layout() {
           ))}
         </nav>
         <div className="sidebar-account">
-          <NavLink to="/account" className="account-link" title="Account and users">
+          <NavLink to="/account" className="account-link" title="Бүртгэл ба хэрэглэгчид">
             <span className="avatar" aria-hidden="true">
               {username?.charAt(0).toUpperCase()}
             </span>
             <span className="account-name">{username}</span>
           </NavLink>
           <button type="button" className="button ghost small" onClick={() => void signOut()}>
-            Sign out
+            Гарах
           </button>
         </div>
       </aside>

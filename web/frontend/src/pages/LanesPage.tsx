@@ -13,7 +13,7 @@ const columns: Column<Lane>[] = [
     render: (lane) => (
       <>
         {lane.LaneName.replace('->', '→')}
-        {!lane.IsActive && <span className="tag">Inactive</span>}
+        {!lane.IsActive && <span className="tag">Идэвхгүй</span>}
       </>
     ),
     sortValue: (lane) => lane.LaneName,
@@ -22,14 +22,14 @@ const columns: Column<Lane>[] = [
     key: 'distance',
     header: 'Distance',
     align: 'right',
-    render: (lane) => `${fmt.num(lane.DistanceKm)} km`,
+    render: (lane) => `${fmt.num(lane.DistanceKm)} км`,
     sortValue: (lane) => lane.DistanceKm,
   },
   {
     key: 'driveTime',
     header: 'Drive time',
     align: 'right',
-    render: (lane) => `${fmt.num(lane.EstimatedDrivingHours, 1)} h`,
+    render: (lane) => `${fmt.num(lane.EstimatedDrivingHours, 1)} цаг`,
     sortValue: (lane) => lane.EstimatedDrivingHours,
   },
   {
@@ -65,7 +65,7 @@ const columns: Column<Lane>[] = [
     key: 'transit',
     header: 'Avg transit',
     align: 'right',
-    render: (lane) => (lane.AvgActualTransitDays == null ? '—' : `${fmt.num(lane.AvgActualTransitDays, 1)} days`),
+    render: (lane) => (lane.AvgActualTransitDays == null ? '—' : `${fmt.num(lane.AvgActualTransitDays, 1)} хоног`),
     sortValue: (lane) => lane.AvgActualTransitDays,
   },
 ]
@@ -75,7 +75,7 @@ export function LanesPage() {
 
   return (
     <>
-      <PageHeader title="Lanes" subtitle="Volume, revenue and punctuality per terminal pair" />
+      <PageHeader title="Чиглэлүүд" subtitle="Терминал хоорондын ачаа, орлого, хугацааны гүйцэтгэл" />
       <Card>
         <Loadable state={state}>
           {(lanes) => (

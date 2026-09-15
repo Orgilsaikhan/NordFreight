@@ -132,7 +132,7 @@ def current_user(session: SessionToken = None) -> User:
             ).fetchone()
         if row:
             return User(id=row["id"], username=row["username"])
-    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sign in to continue.")
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Үргэлжлүүлэхийн тулд нэвтэрнэ үү.")
 
 
 CurrentUser = Annotated[User, Depends(current_user)]

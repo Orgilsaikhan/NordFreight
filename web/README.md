@@ -2,6 +2,8 @@
 
 A small operations site for `NordFreightDB`: a FastAPI backend that talks to SQL Server through pyodbc, and a React frontend built with Vite.
 
+The interface is in Mongolian. Data stays as stored: table column headers, status values (Delivered, Paid, Breached…), names and descriptions remain in English, and so do the error messages raised by the stored procedures.
+
 | Page | What it shows |
 |------|---------------|
 | Overview | Headline figures, monthly revenue, shipments at risk, revenue by cargo category |

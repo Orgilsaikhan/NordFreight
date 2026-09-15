@@ -40,7 +40,7 @@ def get_customer(customer_id: int, conn: Connection):
         customer_id,
     )
     if customer is None:
-        raise HTTPException(status_code=404, detail="Customer not found.")
+        raise HTTPException(status_code=404, detail="Харилцагч олдсонгүй.")
     customer["contacts"] = fetch_all(
         conn,
         """

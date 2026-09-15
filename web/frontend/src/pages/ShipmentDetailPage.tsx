@@ -17,8 +17,8 @@ const itemColumns: Column<ShipmentItem>[] = [
   { key: 'description', header: 'Description', render: (item) => item.Description },
   { key: 'packaging', header: 'Packaging', render: (item) => item.PackagingType },
   { key: 'quantity', header: 'Quantity', align: 'right', render: (item) => fmt.num(item.Quantity) },
-  { key: 'weight', header: 'Weight', align: 'right', render: (item) => `${fmt.num(item.LineWeightKg, 2)} kg` },
-  { key: 'volume', header: 'Volume', align: 'right', render: (item) => `${fmt.num(item.LineVolumeM3, 3)} m³` },
+  { key: 'weight', header: 'Weight', align: 'right', render: (item) => `${fmt.num(item.LineWeightKg, 2)} кг` },
+  { key: 'volume', header: 'Volume', align: 'right', render: (item) => `${fmt.num(item.LineVolumeM3, 3)} м³` },
 ]
 
 const tripColumns: Column<ShipmentTrip>[] = [
@@ -41,55 +41,55 @@ function ShipmentView({ shipment: s, onChanged }: { shipment: ShipmentDetail; on
   return (
     <>
       <PageHeader
-        back={{ to: '/shipments', label: 'Shipments' }}
+        back={{ to: '/shipments', label: 'Ачаа' }}
         title={s.TrackingNumber}
         subtitle={`${s.CustomerName} · ${s.OriginCity} → ${s.DestinationCity}`}
         actions={<StatusBadge value={s.Status} />}
       />
       <div className="stack">
         <div className="grid-2">
-          <Card title="Shipment">
+          <Card title="Ачааны мэдээлэл">
             <Fields>
-              <Field label="Customer">
+              <Field label="Харилцагч">
                 <Link to={`/customers/${s.CustomerId}`}>{s.CustomerName}</Link>
               </Field>
-              <Field label="Lane">
-                {s.OriginTerminal} → {s.DestinationTerminal} · {fmt.num(s.DistanceKm)} km
+              <Field label="Чиглэл">
+                {s.OriginTerminal} → {s.DestinationTerminal} · {fmt.num(s.DistanceKm)} км
               </Field>
-              <Field label="Service">{s.ServiceName}</Field>
-              <Field label="Cargo">{s.CategoryName}</Field>
-              <Field label="Collect from">{s.OriginAddress}</Field>
-              <Field label="Deliver to">{s.DestinationAddress}</Field>
-              <Field label="Weight">{fmt.num(s.TotalWeightKg, 2)} kg</Field>
-              <Field label="Volume">{fmt.num(s.TotalVolumeM3, 3)} m³</Field>
-              <Field label="Declared value">
+              <Field label="Үйлчилгээ">{s.ServiceName}</Field>
+              <Field label="Ачааны ангилал">{s.CategoryName}</Field>
+              <Field label="Ачих хаяг">{s.OriginAddress}</Field>
+              <Field label="Хүргэх хаяг">{s.DestinationAddress}</Field>
+              <Field label="Жин">{fmt.num(s.TotalWeightKg, 2)} кг</Field>
+              <Field label="Эзэлхүүн">{fmt.num(s.TotalVolumeM3, 3)} м³</Field>
+              <Field label="Зарласан үнэ">
                 {fmt.money(s.DeclaredValue)}
-                {s.IsInsured ? ' · insured' : ''}
+                {s.IsInsured ? ' · даатгалтай' : ''}
               </Field>
-              <Field label="Booked">{fmt.dateTime(s.BookedAt)}</Field>
+              <Field label="Захиалсан">{fmt.dateTime(s.BookedAt)}</Field>
             </Fields>
           </Card>
           <div className="stack">
-            <Card title="Delivery">
+            <Card title="Хүргэлт">
               <Fields>
-                <Field label="Pickup">{fmt.date(s.PickupDate)}</Field>
-                <Field label="Promised">{fmt.date(s.PromisedDeliveryDate)}</Field>
-                <Field label="Delivered">{fmt.date(s.ActualDeliveryDate)}</Field>
-                <Field label="Performance">
+                <Field label="Ачих өдөр">{fmt.date(s.PickupDate)}</Field>
+                <Field label="Амласан өдөр">{fmt.date(s.PromisedDeliveryDate)}</Field>
+                <Field label="Хүргэсэн өдөр">{fmt.date(s.ActualDeliveryDate)}</Field>
+                <Field label="Гүйцэтгэл">
                   <StatusBadge value={s.DeliveryPerformance} />
-                  {s.DaysLate ? <span className="muted"> · {fmt.plural(s.DaysLate, 'day')} late</span> : null}
+                  {s.DaysLate ? <span className="muted"> · {fmt.count(s.DaysLate, 'хоног')} хоцорсон</span> : null}
                 </Field>
               </Fields>
             </Card>
-            <Card title="Charges">
+            <Card title="Төлбөр">
               <Fields>
-                <Field label="Freight">{fmt.money(s.FreightCharge)}</Field>
-                <Field label="Surcharges">{fmt.money(s.SurchargeAmount)}</Field>
-                <Field label="VAT">{fmt.money(s.TaxAmount)}</Field>
-                <Field label="Total">
+                <Field label="Тээврийн хөлс">{fmt.money(s.FreightCharge)}</Field>
+                <Field label="Нэмэгдэл төлбөр">{fmt.money(s.SurchargeAmount)}</Field>
+                <Field label="НӨАТ">{fmt.money(s.TaxAmount)}</Field>
+                <Field label="Нийт">
                   <strong>{fmt.money(s.TotalAmount)}</strong>
                 </Field>
-                <Field label="Billing">
+                <Field label="Нэхэмжлэл">
                   {s.InvoiceId ? (
                     <Link to={`/invoices/${s.InvoiceId}`}>{s.InvoiceNumber}</Link>
                   ) : (
@@ -103,12 +103,12 @@ function ShipmentView({ shipment: s, onChanged }: { shipment: ShipmentDetail; on
 
         {s.next_statuses.length > 0 && <StatusForm key={s.Status} shipment={s} onChanged={onChanged} />}
 
-        <Card title="Items">
+        <Card title="Бараа">
           <DataTable columns={itemColumns} rows={s.items} rowKey={(item) => item.LineNumber} />
         </Card>
 
         <div className="grid-2">
-          <Card title="Status history">
+          <Card title="Төлөвийн түүх">
             <ul className="list">
               {s.history.map((entry) => (
                 <li key={entry.StatusHistoryId}>
@@ -117,7 +117,11 @@ function ShipmentView({ shipment: s, onChanged }: { shipment: ShipmentDetail; on
                     <span className="muted small">{fmt.dateTime(entry.ChangedAt)}</span>
                   </div>
                   <div className="muted small">
-                    {[entry.OldStatus ? `From ${fmt.humanize(entry.OldStatus)}` : 'Booked', entry.TerminalCode, entry.ChangedBy]
+                    {[
+                      entry.OldStatus ? `Өмнөх: ${fmt.humanize(entry.OldStatus)}` : 'Шинээр бүртгэсэн',
+                      entry.TerminalCode,
+                      entry.ChangedBy,
+                    ]
                       .filter(Boolean)
                       .join(' · ')}
                   </div>
@@ -126,12 +130,12 @@ function ShipmentView({ shipment: s, onChanged }: { shipment: ShipmentDetail; on
               ))}
             </ul>
           </Card>
-          <Card title="Trips">
+          <Card title="Рейс">
             <DataTable
               columns={tripColumns}
               rows={s.trips}
               rowKey={(trip) => trip.TripId}
-              empty="Not assigned to a trip yet."
+              empty="Рейст хуваарилагдаагүй байна."
             />
           </Card>
         </div>
@@ -168,11 +172,11 @@ function StatusForm({ shipment, onChanged }: { shipment: ShipmentDetail; onChang
   }
 
   return (
-    <Card title="Update status" subtitle="Checked against the allowed transitions by usp_UpdateShipmentStatus">
+    <Card title="Төлөв өөрчлөх" subtitle="Зөвшөөрөгдсөн шилжилтийг usp_UpdateShipmentStatus шалгана">
       {error && <ErrorMessage message={error} />}
       <form className="form-inline" onSubmit={submit}>
         <label className="control">
-          <span>New status</span>
+          <span>Шинэ төлөв</span>
           <select className="select" value={status} onChange={(event) => setStatus(event.target.value)}>
             {shipment.next_statuses.map((value) => (
               <option key={value} value={value}>
@@ -182,9 +186,9 @@ function StatusForm({ shipment, onChanged }: { shipment: ShipmentDetail; onChang
           </select>
         </label>
         <label className="control">
-          <span>Terminal</span>
+          <span>Терминал</span>
           <select className="select" value={terminalId} onChange={(event) => setTerminalId(event.target.value)}>
-            <option value="">Not recorded</option>
+            <option value="">Бүртгээгүй</option>
             {lookups.data?.terminals.map((terminal) => (
               <option key={terminal.TerminalId} value={terminal.TerminalId}>
                 {`${terminal.TerminalCode} · ${terminal.TerminalName}`}
@@ -194,7 +198,7 @@ function StatusForm({ shipment, onChanged }: { shipment: ShipmentDetail; onChang
         </label>
         {status === 'Delivered' && (
           <label className="control">
-            <span>Delivered on</span>
+            <span>Хүргэсэн өдөр</span>
             <input
               className="input"
               type="date"
@@ -206,17 +210,17 @@ function StatusForm({ shipment, onChanged }: { shipment: ShipmentDetail; onChang
           </label>
         )}
         <label className="control grow">
-          <span>Note</span>
+          <span>Тэмдэглэл</span>
           <input
             className="input"
             maxLength={400}
-            placeholder="Optional"
+            placeholder="Заавал биш"
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
           />
         </label>
         <button type="submit" className="button primary" disabled={saving}>
-          {saving ? 'Saving…' : 'Update status'}
+          {saving ? 'Хадгалж байна…' : 'Төлөв өөрчлөх'}
         </button>
       </form>
     </Card>

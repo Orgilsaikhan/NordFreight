@@ -27,7 +27,7 @@ export function DataTable<T>({
   rows,
   rowKey,
   onRowClick,
-  empty = 'Nothing to show.',
+  empty = 'Харуулах мэдээлэл алга.',
   initialSort,
 }: DataTableProps<T>) {
   const [sort, setSort] = useState(initialSort ?? null)

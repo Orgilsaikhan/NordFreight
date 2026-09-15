@@ -17,11 +17,11 @@ type CargoCategory = Lookups['cargo_categories'][number]
 type QuoteState = 'idle' | 'loading' | 'ready' | 'none' | 'error'
 
 const QUOTE_MESSAGES: Record<QuoteState, string> = {
-  idle: 'Choose a lane, service, cargo category and item weights to see the price.',
-  loading: 'Pricing…',
+  idle: 'Үнийг харахын тулд чиглэл, үйлчилгээ, ачааны ангилал болон барааны жинг оруулна уу.',
+  loading: 'Үнэ тооцоолж байна…',
   ready: '',
-  none: 'No rate is on file for this lane and service on the pickup date.',
-  error: 'Could not price this shipment right now.',
+  none: 'Энэ чиглэл, үйлчилгээнд ачих өдөрт хүчинтэй тариф алга.',
+  error: 'Одоогоор үнэ тооцоолж чадсангүй.',
 }
 
 interface ItemDraft {
@@ -45,9 +45,9 @@ export function NewShipmentPage() {
   return (
     <>
       <PageHeader
-        back={{ to: '/shipments', label: 'Shipments' }}
-        title="New shipment"
-        subtitle="Priced and credit-checked by usp_CreateShipment when you book"
+        back={{ to: '/shipments', label: 'Ачаа' }}
+        title="Шинэ ачаа"
+        subtitle="Захиалахад usp_CreateShipment үнийг тооцож, зээлийн хязгаарыг шалгана"
       />
       <Loadable state={lookups}>{(data) => <ShipmentForm lookups={data} />}</Loadable>
     </>
@@ -169,12 +169,12 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
   return (
     <form className="form-layout" onSubmit={submit}>
       <div className="stack">
-        <Card title="Booking">
+        <Card title="Захиалга">
           <div className="form-grid">
             <label className="control">
-              <span>Customer</span>
+              <span>Харилцагч</span>
               <select className="select" required value={customerId} onChange={(event) => setCustomerId(event.target.value)}>
-                <option value="">Choose a customer</option>
+                <option value="">Харилцагч сонгох</option>
                 {lookups.customers
                   .filter((customer) => customer.IsActive)
                   .map((customer) => (
@@ -185,7 +185,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
               </select>
             </label>
             <label className="control">
-              <span>Pickup date</span>
+              <span>Ачих өдөр</span>
               <input
                 className="input"
                 type="date"
@@ -196,38 +196,38 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
               />
             </label>
             <label className="control">
-              <span>Lane</span>
+              <span>Чиглэл</span>
               <select className="select" required value={laneId} onChange={(event) => setLaneId(event.target.value)}>
-                <option value="">Choose a lane</option>
+                <option value="">Чиглэл сонгох</option>
                 {lookups.lanes
                   .filter((candidate) => candidate.IsActive)
                   .map((candidate) => (
                     <option key={candidate.LaneId} value={candidate.LaneId}>
-                      {`${candidate.OriginCity} → ${candidate.DestinationCity} (${fmt.num(candidate.DistanceKm)} km)`}
+                      {`${candidate.OriginCity} → ${candidate.DestinationCity} (${fmt.num(candidate.DistanceKm)} км)`}
                     </option>
                   ))}
               </select>
             </label>
             <label className="control">
-              <span>Service</span>
+              <span>Үйлчилгээ</span>
               <select
                 className="select"
                 required
                 value={serviceLevelId}
                 onChange={(event) => setServiceLevelId(event.target.value)}
               >
-                <option value="">Choose a service</option>
+                <option value="">Үйлчилгээ сонгох</option>
                 {lookups.service_levels.map((service) => (
                   <option key={service.ServiceLevelId} value={service.ServiceLevelId}>
-                    {`${service.ServiceName} (up to ${fmt.plural(service.MaxTransitDays, 'day')})`}
+                    {`${service.ServiceName} (${fmt.count(service.MaxTransitDays, 'хоног')} хүртэл)`}
                   </option>
                 ))}
               </select>
             </label>
             <label className="control">
-              <span>Cargo category</span>
+              <span>Ачааны ангилал</span>
               <select className="select" required value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
-                <option value="">Choose a category</option>
+                <option value="">Ангилал сонгох</option>
                 {lookups.cargo_categories.map((candidate) => (
                   <option key={candidate.CargoCategoryId} value={candidate.CargoCategoryId}>
                     {candidate.CategoryName}
@@ -237,7 +237,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
               {hint && <span className="hint">{hint}</span>}
             </label>
             <label className="control">
-              <span>Declared value (EUR)</span>
+              <span>Зарласан үнэ (EUR)</span>
               <input
                 className="input"
                 type="number"
@@ -249,14 +249,14 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
               />
             </label>
             <AddressSelect
-              label="Collect from"
+              label="Ачих хаяг"
               value={originId}
               onChange={setOriginId}
               groups={origins}
               city={lane?.OriginCity}
             />
             <AddressSelect
-              label="Deliver to"
+              label="Хүргэх хаяг"
               value={destinationId}
               onChange={setDestinationId}
               groups={destinations}
@@ -264,16 +264,16 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
             />
             <label className="checkbox wide">
               <input type="checkbox" checked={insured} onChange={(event) => setInsured(event.target.checked)} />
-              Insure this shipment
+              Ачааг даатгуулах
             </label>
           </div>
         </Card>
 
         <Card
-          title="Items"
+          title="Бараа"
           actions={
             <button type="button" className="button small" onClick={() => setItems((current) => [...current, blankItem()])}>
-              Add item
+              Бараа нэмэх
             </button>
           }
         >
@@ -293,7 +293,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                     Unit volume (m³)
                   </th>
                   <th scope="col">
-                    <span className="sr-only">Remove</span>
+                    <span className="sr-only">Хасах</span>
                   </th>
                 </tr>
               </thead>
@@ -305,7 +305,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                         className="input"
                         required
                         maxLength={200}
-                        aria-label={`Item ${index + 1} description`}
+                        aria-label={`${index + 1}-р барааны тайлбар`}
                         value={item.description}
                         onChange={(event) => updateItem(item.id, { description: event.target.value })}
                       />
@@ -313,7 +313,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                     <td>
                       <select
                         className="select"
-                        aria-label={`Item ${index + 1} packaging`}
+                        aria-label={`${index + 1}-р барааны савлагаа`}
                         value={item.packaging}
                         onChange={(event) => updateItem(item.id, { packaging: event.target.value })}
                       >
@@ -331,7 +331,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                         required
                         min="1"
                         step="1"
-                        aria-label={`Item ${index + 1} quantity`}
+                        aria-label={`${index + 1}-р барааны тоо ширхэг`}
                         value={item.quantity}
                         onChange={(event) => updateItem(item.id, { quantity: event.target.value })}
                       />
@@ -343,7 +343,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                         required
                         min="0.001"
                         step="0.001"
-                        aria-label={`Item ${index + 1} unit weight in kilograms`}
+                        aria-label={`${index + 1}-р барааны нэгжийн жин (кг)`}
                         value={item.weight}
                         onChange={(event) => updateItem(item.id, { weight: event.target.value })}
                       />
@@ -355,7 +355,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                         required
                         min="0.0001"
                         step="0.0001"
-                        aria-label={`Item ${index + 1} unit volume in cubic metres`}
+                        aria-label={`${index + 1}-р барааны нэгжийн эзэлхүүн (м³)`}
                         value={item.volume}
                         onChange={(event) => updateItem(item.id, { volume: event.target.value })}
                       />
@@ -367,7 +367,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
                         disabled={items.length === 1}
                         onClick={() => setItems((current) => current.filter((other) => other.id !== item.id))}
                       >
-                        Remove
+                        Хасах
                       </button>
                     </td>
                   </tr>
@@ -379,19 +379,19 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
       </div>
 
       <aside className="form-aside">
-        <Card title="Price">
+        <Card title="Үнэ">
           <div className="stack">
             <Fields>
-              <Field label="Total weight">{fmt.num(totalWeight, 2)} kg</Field>
-              <Field label="Total volume">{fmt.num(totalVolume, 3)} m³</Field>
+              <Field label="Нийт жин">{fmt.num(totalWeight, 2)} кг</Field>
+              <Field label="Нийт эзэлхүүн">{fmt.num(totalVolume, 3)} м³</Field>
             </Fields>
             {showQuote && quote ? (
               <div className={quoteState === 'loading' ? 'refreshing' : undefined}>
                 <Fields>
-                  <Field label="Freight">{fmt.money(quote.FreightCharge)}</Field>
-                  <Field label="Surcharges">{fmt.money(quote.SurchargeAmount)}</Field>
-                  <Field label="VAT">{fmt.money(quote.TaxAmount)}</Field>
-                  <Field label="Total">
+                  <Field label="Тээврийн хөлс">{fmt.money(quote.FreightCharge)}</Field>
+                  <Field label="Нэмэгдэл төлбөр">{fmt.money(quote.SurchargeAmount)}</Field>
+                  <Field label="НӨАТ">{fmt.money(quote.TaxAmount)}</Field>
+                  <Field label="Нийт">
                     <strong>{fmt.money(quote.TotalAmount)}</strong>
                   </Field>
                 </Fields>
@@ -401,7 +401,7 @@ function ShipmentForm({ lookups }: { lookups: Lookups }) {
             )}
             {error && <ErrorMessage message={error} />}
             <button type="submit" className="button primary block" disabled={saving}>
-              {saving ? 'Booking…' : 'Book shipment'}
+              {saving ? 'Захиалж байна…' : 'Ачаа захиалах'}
             </button>
           </div>
         </Card>
@@ -437,11 +437,9 @@ function AddressSelect({ label, value, onChange, groups, city }: AddressSelectPr
     <label className="control">
       <span>{label}</span>
       <select className="select" required value={value} onChange={(event) => onChange(event.target.value)}>
-        <option value="">Choose an address</option>
-        {groups.nearby.length > 0 && <optgroup label={`In ${city}`}>{groups.nearby.map(addressOption)}</optgroup>}
-        <optgroup label={groups.nearby.length > 0 ? 'Other cities' : 'All addresses'}>
-          {groups.others.map(addressOption)}
-        </optgroup>
+        <option value="">Хаяг сонгох</option>
+        {groups.nearby.length > 0 && <optgroup label={`${city} хотод`}>{groups.nearby.map(addressOption)}</optgroup>}
+        <optgroup label={groups.nearby.length > 0 ? 'Бусад хот' : 'Бүх хаяг'}>{groups.others.map(addressOption)}</optgroup>
       </select>
     </label>
   )
@@ -457,8 +455,8 @@ function addressOption(address: Address) {
 
 function categoryHint(category: CargoCategory): string {
   const notes: string[] = []
-  if (category.RequiresHazmat) notes.push('Dangerous goods, needs an ADR-endorsed crew')
-  if (category.RequiresRefrigeration) notes.push('Travels on refrigerated vehicles')
-  if (category.MaxDeclaredValue != null) notes.push(`Declared value up to ${fmt.money(category.MaxDeclaredValue)}`)
+  if (category.RequiresHazmat) notes.push('Аюултай ачаа, ADR эрхтэй жолооч шаардлагатай')
+  if (category.RequiresRefrigeration) notes.push('Хөргүүртэй машинаар тээвэрлэнэ')
+  if (category.MaxDeclaredValue != null) notes.push(`Зарлах үнийн дээд хэмжээ ${fmt.money(category.MaxDeclaredValue)}`)
   return notes.join(' · ')
 }

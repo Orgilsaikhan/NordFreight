@@ -31,7 +31,7 @@ const columns: Column<Vehicle>[] = [
     key: 'odometer',
     header: 'Odometer',
     align: 'right',
-    render: (vehicle) => `${fmt.num(vehicle.OdometerKm)} km`,
+    render: (vehicle) => `${fmt.num(vehicle.OdometerKm)} км`,
     sortValue: (vehicle) => vehicle.OdometerKm,
   },
   { key: 'trips', header: 'Trips', align: 'right', render: (vehicle) => fmt.num(vehicle.TripCount), sortValue: (vehicle) => vehicle.TripCount },
@@ -70,13 +70,13 @@ export function FleetPage() {
 
   return (
     <>
-      <PageHeader title="Fleet" subtitle="Vehicles with maintenance cost and fuel economy" />
+      <PageHeader title="Авто парк" subtitle="Засвар үйлчилгээний зардал, түлшний зарцуулалт" />
       <div className="toolbar">
         <input
           className="input search"
           type="search"
-          placeholder="Search plate, vehicle or terminal"
-          aria-label="Search vehicles"
+          placeholder="Улсын дугаар, машин эсвэл терминалаар хайх"
+          aria-label="Машин хайх"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
@@ -98,7 +98,7 @@ export function FleetPage() {
                 rows={rows}
                 rowKey={(vehicle) => vehicle.VehicleId}
                 initialSort={{ key: 'plate', direction: 'asc' }}
-                empty="No vehicles match."
+                empty="Тохирох машин алга."
               />
             )
           }}

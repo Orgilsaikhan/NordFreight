@@ -138,7 +138,7 @@ def create_shipment(shipment: NewShipment, conn: Connection):
 def get_shipment(shipment_id: int, conn: Connection):
     shipment = fetch_one(conn, "SELECT * FROM dbo.vw_ShipmentDetails WHERE ShipmentId = ?;", shipment_id)
     if shipment is None:
-        raise HTTPException(status_code=404, detail="Shipment not found.")
+        raise HTTPException(status_code=404, detail="Ачаа олдсонгүй.")
     shipment |= fetch_one(
         conn,
         """

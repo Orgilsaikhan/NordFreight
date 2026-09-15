@@ -7,7 +7,7 @@ import { DataTable, type Column } from './DataTable'
 const PLOT_HEIGHT = 220
 const TOP = 24 // room for the direct label above the tallest column
 const AXIS_BAND = 28 // month labels live inside the SVG, so the card never clips them
-const LEFT = 56
+const LEFT = 80 // wide enough for axis labels such as "€150 мян."
 const RIGHT = 8
 const MAX_BAR_WIDTH = 24
 const CORNER = 4
@@ -33,15 +33,15 @@ export function RevenueChart({ data }: { data: MonthlyRevenue[] }) {
 
   return (
     <Card
-      title="Monthly revenue"
-      subtitle={`Last ${data.length} months`}
+      title="Сарын орлого"
+      subtitle={`Сүүлийн ${data.length} сар`}
       actions={
         <button
           type="button"
           className="button small ghost"
           onClick={() => setView(view === 'chart' ? 'table' : 'chart')}
         >
-          {view === 'chart' ? 'Show table' : 'Show chart'}
+          {view === 'chart' ? 'Хүснэгтээр харах' : 'Графикаар харах'}
         </button>
       }
     >
@@ -86,7 +86,7 @@ function Columns({ data }: { data: MonthlyRevenue[] }) {
   return (
     <div className="chart" ref={containerRef}>
       {width > 0 && (
-        <svg width={width} height={height} role="group" aria-label="Monthly revenue, one column per month">
+        <svg width={width} height={height} role="group" aria-label="Сарын орлого, сар бүр нэг багана">
           {ticks.map((tick) => (
             <g key={tick}>
               <line
@@ -142,7 +142,7 @@ function Columns({ data }: { data: MonthlyRevenue[] }) {
               width={band}
               height={PLOT_HEIGHT}
               tabIndex={0}
-              aria-label={`${fmt.month(point.MonthStart)}: ${fmt.money(point.TotalRevenue)} from ${fmt.plural(point.ShipmentCount, 'shipment')}`}
+              aria-label={`${fmt.month(point.MonthStart)}: ${fmt.money(point.TotalRevenue)}, ${fmt.count(point.ShipmentCount, 'ачаа')}`}
               onPointerEnter={() => setActive(index)}
               onPointerLeave={() => setActive(null)}
               onFocus={() => setActive(index)}
@@ -162,7 +162,7 @@ function Columns({ data }: { data: MonthlyRevenue[] }) {
         >
           <strong>{fmt.money(activePoint.TotalRevenue)}</strong>
           <span>{fmt.month(activePoint.MonthStart)}</span>
-          <span>{fmt.plural(activePoint.ShipmentCount, 'shipment')}</span>
+          <span>{fmt.count(activePoint.ShipmentCount, 'ачаа')}</span>
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { ApiState } from '../useApi'
 
 export function Loading() {
-  return <p className="state">Loading…</p>
+  return <p className="state">Ачаалж байна…</p>
 }
 
 export function ErrorMessage({ message, onRetry }: { message: string; onRetry?: () => void }) {
@@ -11,7 +11,7 @@ export function ErrorMessage({ message, onRetry }: { message: string; onRetry?: 
       <span>{message}</span>
       {onRetry && (
         <button type="button" className="button small" onClick={onRetry}>
-          Try again
+          Дахин оролдох
         </button>
       )}
     </div>

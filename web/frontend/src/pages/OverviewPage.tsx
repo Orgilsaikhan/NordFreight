@@ -36,7 +36,7 @@ export function OverviewPage() {
 
   return (
     <>
-      <PageHeader title="Overview" subtitle={`Freight operations as of ${fmt.date(fmt.todayUtc())}`} />
+      <PageHeader title="Тойм" subtitle={`${fmt.date(fmt.todayUtc())}-ны байдлаар тээврийн үйл ажиллагаа`} />
       <Loadable state={state}>{(data) => <OverviewContent data={data} />}</Loadable>
     </>
   )
@@ -53,34 +53,34 @@ function OverviewContent({ data }: { data: Overview }) {
     <div className="stack">
       <div className="kpis">
         <StatTile
-          label="Revenue this month"
+          label="Энэ сарын орлого"
           value={fmt.compactMoney(current?.TotalRevenue)}
-          meta={growth === null ? undefined : `${growth >= 0 ? '▲' : '▼'} ${fmt.percent(Math.abs(growth))} vs last month`}
+          meta={growth === null ? undefined : `${growth >= 0 ? '▲' : '▼'} ${fmt.percent(Math.abs(growth))} өмнөх сараас`}
           trend={growth === null ? undefined : growth >= 0 ? 'good' : 'bad'}
         />
         <StatTile
-          label="Open shipments"
+          label="Идэвхтэй ачаа"
           value={fmt.num(kpis.OpenShipments)}
-          meta={`${fmt.num(kpis.ExceptionShipments)} in exception`}
+          meta={`Асуудалтай: ${fmt.num(kpis.ExceptionShipments)}`}
         />
-        <StatTile label="On-time delivery" value={fmt.percent(kpis.OnTimePct90d)} meta="Delivered in the last 90 days" />
+        <StatTile label="Хугацаандаа хүргэлт" value={fmt.percent(kpis.OnTimePct90d)} meta="Сүүлийн 90 хоногт хүргэсэн" />
         <StatTile
-          label="Outstanding receivables"
+          label="Төлөгдөөгүй авлага"
           value={fmt.compactMoney(kpis.OutstandingBalance)}
-          meta={`${fmt.plural(kpis.OverdueInvoices, 'invoice')} overdue`}
+          meta={`Хугацаа хэтэрсэн: ${fmt.count(kpis.OverdueInvoices, 'нэхэмжлэх')}`}
         />
-        <StatTile label="Shipments at risk" value={fmt.num(atRisk)} meta={`${fmt.num(breached)} past their promised date`} />
+        <StatTile label="Эрсдэлтэй ачаа" value={fmt.num(atRisk)} meta={`Амласан хугацаа хэтэрсэн: ${fmt.num(breached)}`} />
       </div>
 
       <RevenueChart data={trend} />
 
       <div className="grid-split">
         <Card
-          title="Shipments at risk"
-          subtitle="Still moving and due within two days, or already late"
+          title="Эрсдэлтэй ачаа"
+          subtitle="Замд яваа, 2 хоногийн дотор хүргэх ёстой эсвэл хоцорсон ачаа"
           actions={
             <Link className="small" to="/shipments">
-              All shipments
+              Бүх ачаа
             </Link>
           }
         >
@@ -88,10 +88,10 @@ function OverviewContent({ data }: { data: Overview }) {
             columns={riskColumns}
             rows={data.at_risk}
             rowKey={(shipment) => shipment.ShipmentId}
-            empty="No shipments are at risk."
+            empty="Эрсдэлтэй ачаа алга."
           />
         </Card>
-        <Card title="Revenue by cargo category" subtitle="All time">
+        <Card title="Ачааны ангиллаар орлого" subtitle="Бүх хугацаанд">
           <CategoryBars rows={data.categories} />
         </Card>
       </div>

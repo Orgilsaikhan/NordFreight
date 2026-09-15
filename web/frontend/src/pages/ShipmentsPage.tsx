@@ -53,11 +53,11 @@ export function ShipmentsPage() {
   return (
     <>
       <PageHeader
-        title="Shipments"
-        subtitle="Every booking, latest pickup first"
+        title="Ачаа"
+        subtitle="Бүх захиалга, хамгийн сүүлийн ачилтаас эхлэн"
         actions={
           <Link className="button primary" to="/shipments/new">
-            New shipment
+            Шинэ ачаа
           </Link>
         }
       />
@@ -65,18 +65,18 @@ export function ShipmentsPage() {
         <input
           className="input search"
           type="search"
-          placeholder="Search tracking number or customer"
-          aria-label="Search shipments"
+          placeholder="Тээврийн дугаар эсвэл харилцагчаар хайх"
+          aria-label="Ачаа хайх"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
         <select
           className="select"
-          aria-label="Filter by status"
+          aria-label="Төлөвөөр шүүх"
           value={status}
           onChange={(event) => updateSearchParams(setParams, { status: event.target.value, page: '' })}
         >
-          <option value="">All statuses</option>
+          <option value="">Бүх төлөв</option>
           {SHIPMENT_STATUSES.map((value) => (
             <option key={value} value={value}>
               {fmt.humanize(value)}
@@ -93,7 +93,7 @@ export function ShipmentsPage() {
                 rows={data.rows}
                 rowKey={(shipment) => shipment.ShipmentId}
                 onRowClick={(shipment) => navigate(`/shipments/${shipment.ShipmentId}`)}
-                empty="No shipments match these filters."
+                empty="Шүүлтүүрт тохирох ачаа алга."
               />
               <Pagination
                 page={page}

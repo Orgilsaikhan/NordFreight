@@ -25,7 +25,7 @@ export function AccountPage() {
 
   return (
     <>
-      <PageHeader title="Account" subtitle={`Signed in as ${username}`} />
+      <PageHeader title="Бүртгэл" subtitle={`Нэвтэрсэн хэрэглэгч: ${username}`} />
       <div className="grid-2">
         <PasswordCard />
         <UsersCard />
@@ -47,7 +47,7 @@ function PasswordCard() {
     setError(null)
     setChanged(false)
     if (next !== confirm) {
-      setError('The new passwords do not match.')
+      setError('Шинэ нууц үг таарахгүй байна.')
       return
     }
     setSaving(true)
@@ -65,16 +65,16 @@ function PasswordCard() {
   }
 
   return (
-    <Card title="Change password" subtitle="Other browsers signed in to this account will be signed out">
+    <Card title="Нууц үг солих" subtitle="Энэ бүртгэлээр нэвтэрсэн бусад хөтчөөс гаргана">
       <form className="stack" onSubmit={submit}>
         {error && <ErrorMessage message={error} />}
         {changed && (
           <p className="notice" role="status">
-            Password changed.
+            Нууц үг солигдлоо.
           </p>
         )}
         <label className="control">
-          <span>Current password</span>
+          <span>Одоогийн нууц үг</span>
           <input
             className="input"
             type="password"
@@ -85,7 +85,7 @@ function PasswordCard() {
           />
         </label>
         <label className="control">
-          <span>New password</span>
+          <span>Шинэ нууц үг</span>
           <input
             className="input"
             type="password"
@@ -95,10 +95,10 @@ function PasswordCard() {
             value={next}
             onChange={(event) => setNext(event.target.value)}
           />
-          <span className="hint">At least 8 characters.</span>
+          <span className="hint">Хамгийн багадаа 8 тэмдэгт.</span>
         </label>
         <label className="control">
-          <span>Confirm new password</span>
+          <span>Шинэ нууц үгээ давтах</span>
           <input
             className="input"
             type="password"
@@ -111,7 +111,7 @@ function PasswordCard() {
         </label>
         <div>
           <button type="submit" className="button primary" disabled={saving}>
-            {saving ? 'Saving…' : 'Change password'}
+            {saving ? 'Хадгалж байна…' : 'Нууц үг солих'}
           </button>
         </div>
       </form>
@@ -146,14 +146,14 @@ function UsersCard() {
   }
 
   return (
-    <Card title="Users" subtitle="Everyone signed in can view and change freight data">
+    <Card title="Хэрэглэгчид" subtitle="Нэвтэрсэн хэн бүхэн тээврийн мэдээллийг харж, өөрчилж чадна">
       <div className="stack">
         <Loadable state={users}>
           {(rows) => <DataTable columns={userColumns} rows={rows} rowKey={(user) => user.id} />}
         </Loadable>
         <form className="form-inline" onSubmit={submit}>
           <label className="control">
-            <span>New username</span>
+            <span>Шинэ нэвтрэх нэр</span>
             <input
               className="input"
               autoComplete="off"
@@ -161,13 +161,13 @@ function UsersCard() {
               minLength={3}
               maxLength={64}
               pattern="[A-Za-z0-9._\-]+"
-              title="Letters, numbers, dots, dashes and underscores"
+              title="Латин үсэг, тоо, цэг, зураас, доогуур зураас"
               value={username}
               onChange={(event) => setUsername(event.target.value)}
             />
           </label>
           <label className="control">
-            <span>Password</span>
+            <span>Нууц үг</span>
             <input
               className="input"
               type="password"
@@ -179,13 +179,13 @@ function UsersCard() {
             />
           </label>
           <button type="submit" className="button" disabled={saving}>
-            {saving ? 'Adding…' : 'Add user'}
+            {saving ? 'Нэмж байна…' : 'Хэрэглэгч нэмэх'}
           </button>
         </form>
         {error && <ErrorMessage message={error} />}
         {added && (
           <p className="notice" role="status">
-            {`Added ${added}. They can sign in now.`}
+            {`${added} нэмэгдлээ. Одоо нэвтэрч болно.`}
           </p>
         )}
       </div>

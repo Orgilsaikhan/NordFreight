@@ -39,7 +39,7 @@ for module in (overview, shipments, customers, invoices, operations, reference):
 
 # Plainer wording for unique constraints that a form can run into.
 DUPLICATE_MESSAGES = {
-    "UQ_Payments_Invoice_Reference": "This invoice already has a payment with that reference number.",
+    "UQ_Payments_Invoice_Reference": "Энэ нэхэмжлэхэд ийм гүйлгээний дугаартай төлбөр аль хэдийн бүртгэгдсэн байна.",
 }
 
 
@@ -47,7 +47,7 @@ DUPLICATE_MESSAGES = {
 async def database_error(request: Request, exc: pyodbc.Error) -> JSONResponse:
     number, message = describe_error(exc)
     if number is not None and 50000 <= number <= 50999:
-        # THROW from a stored procedure: a business rule refused the change.
+        # THROW from a stored procedure: a business rule refused the change. The message is the database's own.
         return JSONResponse(status_code=422, content={"detail": message})
     if number in (2601, 2627):
         friendly = next((text for name, text in DUPLICATE_MESSAGES.items() if name in message), message)
@@ -55,7 +55,7 @@ async def database_error(request: Request, exc: pyodbc.Error) -> JSONResponse:
     if number == 547:
         return JSONResponse(status_code=422, content={"detail": message})
     logger.error("Database error on %s %s: %s", request.method, request.url.path, message)
-    return JSONResponse(status_code=500, content={"detail": f"Database error: {message}"})
+    return JSONResponse(status_code=500, content={"detail": f"Өгөгдлийн сангийн алдаа: {message}"})
 
 
 # Serve the built React app when it exists; during development Vite serves it instead.
