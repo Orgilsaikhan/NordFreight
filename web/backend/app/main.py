@@ -5,23 +5,36 @@ Production:   build ../frontend with `npm run build`, then `uv run uvicorn app.m
 """
 
 import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import pyodbc
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from .auth import current_user, init_store
 from .db import describe_error
-from .routes import customers, invoices, operations, overview, reference, shipments
+from .routes import account, customers, invoices, operations, overview, reference, shipments
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
 logger = logging.getLogger("uvicorn.error")
 
-app = FastAPI(title="NordFreight API")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_store()
+    yield
+
+
+app = FastAPI(title="NordFreight API", lifespan=lifespan)
+
+# Signing in is public; the account routes check the session themselves where it matters.
+app.include_router(account.router, prefix="/api")
+
+# Everything that reads or changes freight data needs a signed-in user.
 for module in (overview, shipments, customers, invoices, operations, reference):
-    app.include_router(module.router, prefix="/api")
+    app.include_router(module.router, prefix="/api", dependencies=[Depends(current_user)])
 
 
 # Plainer wording for unique constraints that a form can run into.

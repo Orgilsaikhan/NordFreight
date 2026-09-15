@@ -1,0 +1,4 @@
+.venv/
+__pycache__/
+# Accounts and sessions (auth.sqlite3)
+data/

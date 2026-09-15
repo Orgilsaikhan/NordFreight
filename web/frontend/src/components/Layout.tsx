@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
+import { useAuth } from '../auth'
 
 const NAV_ITEMS = [
   { to: '/', label: 'Overview' },
@@ -13,6 +14,7 @@ const NAV_ITEMS = [
 
 export function Layout() {
   const { pathname } = useLocation()
+  const { username, signOut } = useAuth()
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -32,6 +34,17 @@ export function Layout() {
             </NavLink>
           ))}
         </nav>
+        <div className="sidebar-account">
+          <NavLink to="/account" className="account-link" title="Account and users">
+            <span className="avatar" aria-hidden="true">
+              {username?.charAt(0).toUpperCase()}
+            </span>
+            <span className="account-name">{username}</span>
+          </NavLink>
+          <button type="button" className="button ghost small" onClick={() => void signOut()}>
+            Sign out
+          </button>
+        </div>
       </aside>
       <main className="main">
         <Outlet />

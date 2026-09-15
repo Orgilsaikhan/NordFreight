@@ -109,7 +109,13 @@ function Columns({ data }: { data: MonthlyRevenue[] }) {
                 d={columnPath(barX(index), y(point.TotalRevenue), barWidth, baseline - y(point.TotalRevenue))}
               />
               {(last - index) % labelEvery === 0 && (
-                <text className="chart-axis" x={barX(index) + barWidth / 2} y={baseline + 18} textAnchor="middle">
+                // The newest month sits at the right edge, so its label aligns to the column's right side.
+                <text
+                  className="chart-axis"
+                  x={index === last ? barX(index) + barWidth : barX(index) + barWidth / 2}
+                  y={baseline + 18}
+                  textAnchor={index === last ? 'end' : 'middle'}
+                >
                   {fmt.monthTick(point.MonthStart)}
                 </text>
               )}

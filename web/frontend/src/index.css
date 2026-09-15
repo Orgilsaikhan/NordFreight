@@ -961,6 +961,113 @@ a:hover {
   color: var(--text-secondary);
 }
 
+/* Account and sign-in */
+
+.sidebar-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.account-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 8px 5px 5px;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  transition: background-color 0.12s ease;
+}
+
+.account-link:hover,
+.account-link.active {
+  background: var(--surface-hover);
+  text-decoration: none;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.account-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .sidebar-account {
+    margin-top: 0;
+    margin-left: auto;
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+.login {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+.login-panel {
+  width: 100%;
+  max-width: 380px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.login-brand {
+  margin-bottom: 28px;
+  padding: 0;
+}
+
+.login-panel h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.login-form .input {
+  width: 100%;
+}
+
+.login-form .alert {
+  margin-bottom: 0;
+}
+
+.login-form .button {
+  margin-top: 6px;
+}
+
+.notice {
+  color: var(--good-text);
+  font-size: 13px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
