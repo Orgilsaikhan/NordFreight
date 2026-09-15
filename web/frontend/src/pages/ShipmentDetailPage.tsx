@@ -44,7 +44,14 @@ function ShipmentView({ shipment: s, onChanged }: { shipment: ShipmentDetail; on
         back={{ to: '/shipments', label: 'Ачаа' }}
         title={s.TrackingNumber}
         subtitle={`${s.CustomerName} · ${s.OriginCity} → ${s.DestinationCity}`}
-        actions={<StatusBadge value={s.Status} />}
+        actions={
+          <>
+            <StatusBadge value={s.Status} />
+            <Link className="button small" to={`/data/Shipments/row?ShipmentId=${s.ShipmentId}`}>
+              Засах
+            </Link>
+          </>
+        }
       />
       <div className="stack">
         <div className="grid-2">

@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 
 from .auth import current_user, init_store
 from .db import describe_error
-from .routes import account, customers, invoices, operations, overview, reference, shipments
+from .routes import account, customers, data, invoices, operations, overview, reference, shipments
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
@@ -33,7 +33,7 @@ app = FastAPI(title="NordFreight API", lifespan=lifespan)
 app.include_router(account.router, prefix="/api")
 
 # Everything that reads or changes freight data needs a signed-in user.
-for module in (overview, shipments, customers, invoices, operations, reference):
+for module in (overview, shipments, customers, invoices, operations, reference, data):
     app.include_router(module.router, prefix="/api", dependencies=[Depends(current_user)])
 
 
@@ -42,17 +42,21 @@ DUPLICATE_MESSAGES = {
     "UQ_Payments_Invoice_Reference": "Энэ нэхэмжлэхэд ийм гүйлгээний дугаартай төлбөр аль хэдийн бүртгэгдсэн байна.",
 }
 
+# Values the database refuses: NULL into NOT NULL, CHECK and FOREIGN KEY conflicts,
+# failed conversions, arithmetic overflow and truncated text.
+REJECTED_VALUE_ERRORS = {515, 547, 241, 242, 245, 2628, 8114, 8115, 8152}
+
 
 @app.exception_handler(pyodbc.Error)
 async def database_error(request: Request, exc: pyodbc.Error) -> JSONResponse:
     number, message = describe_error(exc)
     if number is not None and 50000 <= number <= 50999:
-        # THROW from a stored procedure: a business rule refused the change. The message is the database's own.
+        # THROW from a stored procedure or trigger: a business rule refused the change.
         return JSONResponse(status_code=422, content={"detail": message})
     if number in (2601, 2627):
         friendly = next((text for name, text in DUPLICATE_MESSAGES.items() if name in message), message)
         return JSONResponse(status_code=409, content={"detail": friendly})
-    if number == 547:
+    if number in REJECTED_VALUE_ERRORS:
         return JSONResponse(status_code=422, content={"detail": message})
     logger.error("Database error on %s %s: %s", request.method, request.url.path, message)
     return JSONResponse(status_code=500, content={"detail": f"Өгөгдлийн сангийн алдаа: {message}"})

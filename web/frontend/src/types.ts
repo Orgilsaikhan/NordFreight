@@ -323,3 +323,42 @@ export interface CreatedShipment extends Quote {
   TrackingNumber: string
   TotalWeightKg: number
 }
+
+// Data editor: table metadata from SQL Server's catalog, and raw rows.
+
+export type CellValue = string | number | boolean | null
+
+export type DataRow = Record<string, CellValue>
+
+export interface ColumnInfo {
+  name: string
+  type: string
+  /** In characters; null when unlimited or not text. */
+  max_length: number | null
+  precision: number
+  scale: number
+  nullable: boolean
+  primary_key: boolean
+  identity: boolean
+  computed: boolean
+  row_version: boolean
+  editable: boolean
+  references: { table: string; column: string } | null
+}
+
+export interface TableInfo {
+  name: string
+  primary_key: string[]
+  columns: ColumnInfo[]
+}
+
+export interface TableSummary {
+  name: string
+  row_count: number
+  column_count: number
+  editable_count: number
+  primary_key: string[]
+}
+
+/** Per foreign-key column: dropdown choices, or null when the referenced table is too large. */
+export type ForeignKeyOptions = Record<string, { value: CellValue; label: string | null }[] | null>

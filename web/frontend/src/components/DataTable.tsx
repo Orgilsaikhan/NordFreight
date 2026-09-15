@@ -6,7 +6,7 @@ type SortDirection = 'asc' | 'desc'
 
 export interface Column<T> {
   key: string
-  header: string
+  header: ReactNode
   render: (row: T) => ReactNode
   align?: 'right'
   /** Makes the column sortable by this value. */

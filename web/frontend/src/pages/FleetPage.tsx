@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Card } from '../components/Card'
 import { DataTable, type Column } from '../components/DataTable'
 import { PageHeader } from '../components/PageHeader'
 import { Loadable } from '../components/States'
 import { StatusBadge } from '../components/StatusBadge'
+import { rowEditorPath } from '../dataEditor'
 import * as fmt from '../format'
 import type { Vehicle } from '../types'
 import { useApi } from '../useApi'
@@ -65,12 +67,13 @@ const columns: Column<Vehicle>[] = [
 ]
 
 export function FleetPage() {
+  const navigate = useNavigate()
   const state = useApi<Vehicle[]>('/fleet')
   const [search, setSearch] = useState('')
 
   return (
     <>
-      <PageHeader title="Авто парк" subtitle="Засвар үйлчилгээний зардал, түлшний зарцуулалт" />
+      <PageHeader title="Авто парк" subtitle="Засвар үйлчилгээний зардал, түлшний зарцуулалт. Мөр дээр дарж засна." />
       <div className="toolbar">
         <input
           className="input search"
@@ -97,6 +100,7 @@ export function FleetPage() {
                 columns={columns}
                 rows={rows}
                 rowKey={(vehicle) => vehicle.VehicleId}
+                onRowClick={(vehicle) => navigate(rowEditorPath('Vehicles', { VehicleId: vehicle.VehicleId }))}
                 initialSort={{ key: 'plate', direction: 'asc' }}
                 empty="Тохирох машин алга."
               />

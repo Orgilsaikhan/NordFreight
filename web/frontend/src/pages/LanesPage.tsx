@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router'
 import { Card } from '../components/Card'
 import { DataTable, type Column } from '../components/DataTable'
 import { PageHeader } from '../components/PageHeader'
 import { Loadable } from '../components/States'
+import { rowEditorPath } from '../dataEditor'
 import * as fmt from '../format'
 import type { Lane } from '../types'
 import { useApi } from '../useApi'
@@ -71,11 +73,12 @@ const columns: Column<Lane>[] = [
 ]
 
 export function LanesPage() {
+  const navigate = useNavigate()
   const state = useApi<Lane[]>('/lanes')
 
   return (
     <>
-      <PageHeader title="Чиглэлүүд" subtitle="Терминал хоорондын ачаа, орлого, хугацааны гүйцэтгэл" />
+      <PageHeader title="Чиглэлүүд" subtitle="Терминал хоорондын ачаа, орлого, хугацааны гүйцэтгэл. Мөр дээр дарж засна." />
       <Card>
         <Loadable state={state}>
           {(lanes) => (
@@ -83,6 +86,7 @@ export function LanesPage() {
               columns={columns}
               rows={lanes}
               rowKey={(lane) => lane.LaneId}
+              onRowClick={(lane) => navigate(rowEditorPath('Lanes', { LaneId: lane.LaneId }))}
               initialSort={{ key: 'revenue', direction: 'desc' }}
             />
           )}

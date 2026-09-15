@@ -1068,6 +1068,81 @@ a:hover {
   font-size: 13px;
 }
 
+/* Data editor */
+
+.tag-key {
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.null {
+  color: var(--text-muted);
+}
+
+.cell-clip {
+  display: inline-block;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+.field-name {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.field-type {
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.input[readonly] {
+  background-color: var(--page);
+  color: var(--text-secondary);
+}
+
+.form-grid .textarea,
+.textarea {
+  height: auto;
+  min-height: 76px;
+  padding: 8px 12px;
+  resize: vertical;
+}
+
+.control.is-changed .input,
+.control.is-changed .select {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.saved-notice {
+  margin-bottom: 12px;
+}
+
+.save-bar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

@@ -4,6 +4,9 @@ import { RequireAuth } from './components/RequireAuth'
 import { AccountPage } from './pages/AccountPage'
 import { CustomerDetailPage } from './pages/CustomerDetailPage'
 import { CustomersPage } from './pages/CustomersPage'
+import { DataRowPage } from './pages/DataRowPage'
+import { DataTablePage } from './pages/DataTablePage'
+import { DataTablesPage } from './pages/DataTablesPage'
 import { DriversPage } from './pages/DriversPage'
 import { FleetPage } from './pages/FleetPage'
 import { InvoiceDetailPage } from './pages/InvoiceDetailPage'
@@ -34,6 +37,9 @@ export default function App() {
           <Route path="fleet" element={<FleetPage />} />
           <Route path="drivers" element={<DriversPage />} />
           <Route path="lanes" element={<LanesPage />} />
+          <Route path="data" element={<DataTablesPage />} />
+          <Route path="data/:table" element={<DataTablePage />} />
+          <Route path="data/:table/row" element={<DataRowPage />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>

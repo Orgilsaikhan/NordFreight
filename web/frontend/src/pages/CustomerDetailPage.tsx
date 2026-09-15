@@ -63,7 +63,14 @@ function CustomerView({ customer: c }: { customer: CustomerDetail }) {
         back={{ to: '/customers', label: 'Харилцагчид' }}
         title={c.LegalName}
         subtitle={[c.CustomerCode, c.TradingName].filter(Boolean).join(' · ')}
-        actions={<StatusBadge value={c.IsActive ? 'Active' : 'Inactive'} />}
+        actions={
+          <>
+            <StatusBadge value={c.IsActive ? 'Active' : 'Inactive'} />
+            <Link className="button small" to={`/data/Customers/row?CustomerId=${c.CustomerId}`}>
+              Засах
+            </Link>
+          </>
+        }
       />
       <div className="stack">
         <div className="kpis">

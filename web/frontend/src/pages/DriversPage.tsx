@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Card } from '../components/Card'
 import { DataTable, type Column } from '../components/DataTable'
 import { PageHeader } from '../components/PageHeader'
 import { Loadable } from '../components/States'
 import { StatusBadge } from '../components/StatusBadge'
+import { rowEditorPath } from '../dataEditor'
 import * as fmt from '../format'
 import type { Driver } from '../types'
 import { useApi } from '../useApi'
@@ -68,13 +70,14 @@ const columns: Column<Driver>[] = [
 ]
 
 export function DriversPage() {
+  const navigate = useNavigate()
   const state = useApi<Driver[]>('/drivers')
   const [search, setSearch] = useState('')
   const [compliance, setCompliance] = useState('')
 
   return (
     <>
-      <PageHeader title="Жолооч нар" subtitle="Ачаалал ба жолооны үнэмлэхийн хүчинтэй байдал" />
+      <PageHeader title="Жолооч нар" subtitle="Ачаалал ба жолооны үнэмлэхийн хүчинтэй байдал. Мөр дээр дарж засна." />
       <Loadable state={state}>
         {(drivers) => {
           const statuses = [...new Set(drivers.map((driver) => driver.ComplianceStatus))].sort()
@@ -114,6 +117,7 @@ export function DriversPage() {
                   columns={columns}
                   rows={rows}
                   rowKey={(driver) => driver.DriverId}
+                  onRowClick={(driver) => navigate(rowEditorPath('Drivers', { DriverId: driver.DriverId }))}
                   initialSort={{ key: 'name', direction: 'asc' }}
                   empty="Тохирох жолооч алга."
                 />

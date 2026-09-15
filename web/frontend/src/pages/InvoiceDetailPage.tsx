@@ -51,7 +51,14 @@ function InvoiceView({ invoice: i, onChanged }: { invoice: InvoiceDetail; onChan
         back={{ to: '/invoices', label: 'Нэхэмжлэх' }}
         title={i.InvoiceNumber}
         subtitle={<Link to={`/customers/${i.CustomerId}`}>{i.CustomerName}</Link>}
-        actions={<StatusBadge value={i.Status} />}
+        actions={
+          <>
+            <StatusBadge value={i.Status} />
+            <Link className="button small" to={`/data/Invoices/row?InvoiceId=${i.InvoiceId}`}>
+              Засах
+            </Link>
+          </>
+        }
       />
       <div className="stack">
         <div className="kpis">

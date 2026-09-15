@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/fleet', label: 'Авто парк' },
   { to: '/drivers', label: 'Жолооч нар' },
   { to: '/lanes', label: 'Чиглэлүүд' },
+  { to: '/data', label: 'Өгөгдөл' },
 ]
 
 export function Layout() {

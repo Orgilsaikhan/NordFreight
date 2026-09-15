@@ -13,6 +13,25 @@ The interface is in Mongolian. Data stays as stored: table column headers, statu
 | Invoices | Receivables ageing; record a payment against an open invoice |
 | Fleet, Drivers, Lanes | The reporting views, sortable |
 
+## Editing data
+
+**Өгөгдөл** (Data) in the sidebar lists every table in `NordFreightDB`. Open a table, click a row, change any values and save. The shipment, customer and invoice pages have a **Засах** (Edit) button that opens their row directly, and rows on the Fleet, Drivers and Lanes pages open their editor too.
+
+- **Primary keys can't be edited.** Neither can computed columns (such as `Shipments.TotalAmount`) or `RowVersion`, because SQL Server maintains those itself.
+- Only the columns you changed are sent. `UpdatedAt` is set to the current time unless you edit it yourself.
+- Foreign keys are dropdowns when the referenced table has 500 rows or fewer, and a number box otherwise. Every foreign key links to the row it points to.
+- `Customers` and `Shipments` carry a `RowVersion`: if someone else saved the row after you opened it, your save is refused (HTTP 409) instead of overwriting their change.
+- Edits are plain `UPDATE`s, so **the stored procedures' business rules don't run** (for example the shipment status transitions or the credit check). CHECK, UNIQUE and FOREIGN KEY constraints still apply, and so do the triggers on `Shipments`, `Payments` and `TripShipments`. A change the database refuses comes back with its own message.
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/data/tables` | Tables with row and column counts |
+| `GET /api/data/tables/{table}` | Column metadata (type, nullability, key, computed, foreign key) |
+| `GET /api/data/tables/{table}/rows?q=&page=` | Rows in primary-key order |
+| `GET /api/data/tables/{table}/row?{key columns}` | One row |
+| `PATCH /api/data/tables/{table}/row?{key columns}` | `{"changes": {...}, "row_version": "0x…"}` |
+| `GET /api/data/tables/{table}/options` | Dropdown choices for foreign-key columns |
+
 ## Signing in
 
 Every page sits behind a sign-in page, which is where signed-out visitors land. All accounts have the same rights: anyone signed in can view and change freight data.
